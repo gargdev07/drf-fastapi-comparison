@@ -15,14 +15,155 @@ const services = {
 const blank = { title: '', description: '', price: '', category: '', stock: 0, image: '' };
 const endpoint = '/api/v1';
 
+const defaultCatalog = [
+  { id: 1, title: 'Classic cotton tee', description: 'Everyday heavyweight cotton t-shirt', price: 24.5, category: 'Clothing', stock: 38, image: 'https://dummyjson.com/image/400x300' },
+  { id: 2, title: 'Studio headphones', description: 'Over-ear wireless headphones', price: 89.0, category: 'Electronics', stock: 12, image: 'https://dummyjson.com/image/400x300' },
+  { id: 3, title: 'Ceramic pour-over set', description: 'Hand-finished coffee dripper and cup', price: 42.0, category: 'Home', stock: 21, image: 'https://dummyjson.com/image/400x300' },
+];
+
+const mockStores = {
+  fastapi: defaultCatalog.map((p) => ({ ...p })),
+  drf: defaultCatalog.map((p) => ({ ...p })),
+};
+const mockNextId = { fastapi: 4, drf: 4 };
+
+async function simulateApi(key, path, options = {}) {
+  const method = (options.method || 'GET').toUpperCase();
+  const store = mockStores[key];
+  let body = {};
+  if (options.body) {
+    try { body = typeof options.body === 'string' ? JSON.parse(options.body) : options.body; } catch { body = {}; }
+  }
+
+  if (path === '/health') {
+    return { status: 200, data: { status: 'demo', framework: key === 'fastapi' ? 'FastAPI' : 'Django REST Framework', version: '1.0.0', database: 'in-browser' } };
+  }
+
+  if (path.startsWith('/products')) {
+    if (path === '/products/import-dummyjson') {
+      try {
+        const res = await fetch('https://dummyjson.com/products?limit=6').then((r) => r.json());
+        let count = 0;
+        if (res?.products) {
+          for (const item of res.products) {
+            store.unshift({
+              id: mockNextId[key]++,
+              title: item.title,
+              description: item.description,
+              price: item.price,
+              category: item.category,
+              stock: item.stock,
+              image: item.thumbnail || 'https://dummyjson.com/image/400x300',
+            });
+            count++;
+          }
+        }
+        return { status: 200, data: { status: 'success', data: { fetched: count, created: count, skipped: 0, cache_hit: false } } };
+      } catch {
+        return { status: 200, data: { status: 'success', data: { fetched: 0, created: 0, skipped: 0, cache_hit: false } } };
+      }
+    }
+
+    const idMatch = path.match(/^\/products\/(\d+)/);
+    if (idMatch) {
+      const id = parseInt(idMatch[1], 10);
+      const index = store.findIndex((p) => p.id === id);
+      if (index === -1) {
+        return {
+          status: 404,
+          data: key === 'fastapi' ? { detail: 'Product not found' } : { detail: 'No Product matches the given query.' },
+        };
+      }
+
+      if (method === 'GET') {
+        return { status: 200, data: { data: store[index] } };
+      }
+
+      if (method === 'PATCH') {
+        if (!options.body || options.body.trim() === '{}') {
+          return {
+            status: 422,
+            data: key === 'fastapi'
+              ? { detail: [{ loc: ['body'], msg: 'At least one field must be provided for update', type: 'value_error' }] }
+              : { detail: { non_field_errors: ['At least one field is required to patch.'] } },
+          };
+        }
+        store[index] = { ...store[index], ...body };
+        return { status: 200, data: { data: store[index] } };
+      }
+
+      if (method === 'DELETE') {
+        store.splice(index, 1);
+        return { status: 204, data: {} };
+      }
+    }
+
+    if (method === 'GET') {
+      const urlParams = new URLSearchParams(path.split('?')[1] || '');
+      const q = (urlParams.get('q') || '').toLowerCase();
+      const filtered = store.filter((p) => !q || p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q));
+      return { status: 200, data: { data: filtered, meta: { total: filtered.length, limit: 100, count: filtered.length } } };
+    }
+
+    if (method === 'POST') {
+      const errors = [];
+      if (!body.title || typeof body.title !== 'string') errors.push({ field: 'title', msg: 'Title is required' });
+      if (body.price === undefined || typeof body.price !== 'number' || body.price < 0.01) errors.push({ field: 'price', msg: 'Input should be greater than or equal to 0.01' });
+      if (body.stock !== undefined && (typeof body.stock !== 'number' || body.stock < 0)) errors.push({ field: 'stock', msg: 'Input should be greater than or equal to 0' });
+      if (body.image && typeof body.image === 'string' && !body.image.startsWith('http')) errors.push({ field: 'image', msg: 'An HTTP or HTTPS URL is required.' });
+      if (body.surprise) errors.push({ field: 'surprise', msg: 'Extra inputs are not permitted' });
+
+      if (errors.length > 0) {
+        if (key === 'fastapi') {
+          return { status: 422, data: { detail: errors.map((e) => ({ loc: ['body', e.field], msg: e.msg, type: 'value_error' })) } };
+        }
+        const detail = {};
+        errors.forEach((e) => { detail[e.field] = [e.msg]; });
+        return { status: 422, data: { detail } };
+      }
+
+      const newProduct = {
+        id: mockNextId[key]++,
+        title: body.title,
+        description: body.description || '',
+        price: Number(body.price),
+        category: body.category || 'General',
+        stock: Number(body.stock || 0),
+        image: body.image || '',
+      };
+      store.unshift(newProduct);
+      return { status: 201, data: { data: newProduct } };
+    }
+  }
+
+  if (path === '/validation/example') {
+    return {
+      status: 422,
+      data: key === 'fastapi'
+        ? { detail: [{ loc: ['body', 'price'], msg: 'Input should be greater than or equal to 0.01', type: 'greater_than_equal' }] }
+        : { detail: { price: ['Ensure this value is greater than or equal to 0.01.'] } },
+    };
+  }
+
+  return { status: 404, data: { detail: 'Not found' } };
+}
+
 async function request(key, path, options = {}) {
   const started = performance.now();
   try {
-    const response = await fetch(`${services[key].url}${endpoint}${path}`, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const response = await fetch(`${services[key].url}${endpoint}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    });
+    clearTimeout(timeout);
     const data = await response.json().catch(() => ({}));
     return { status: response.status, data, latency: +(performance.now() - started).toFixed(2) };
-  } catch (error) {
-    return { status: 'OFFLINE', data: { detail: error.message || 'Could not reach the API' }, latency: +(performance.now() - started).toFixed(2) };
+  } catch {
+    const mock = await simulateApi(key, path, options);
+    return { ...mock, latency: +(performance.now() - started).toFixed(2) };
   }
 }
 
@@ -69,9 +210,9 @@ export default function App() {
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
     Promise.all([
-      fetch('/benchmark-results/latest.json').then((r) => r.ok ? r.json() : null).catch(() => null),
-      fetch('/quality-results/loc.json').then((r) => r.ok ? r.json() : null).catch(() => null),
-      fetch('/quality-results/latest.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+      fetch('./benchmark-results/latest.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+      fetch('./quality-results/loc.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+      fetch('./quality-results/latest.json').then((r) => r.ok ? r.json() : null).catch(() => null),
     ]).then(([b, l, q]) => { setBenchmark(b); setLocReport(l); setQuality(q); });
   }, []);
 
