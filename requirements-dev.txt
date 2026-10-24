@@ -1,0 +1,2 @@
+-r backend/fastapi_app/requirements.txt
+-r backend/drf_app/requirements.txt

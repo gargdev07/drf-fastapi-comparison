@@ -1,0 +1,23 @@
+services:
+  fastapi:
+    build: ./backend/fastapi_app
+    ports: ["8000:8000"]
+    environment:
+      FASTAPI_DB_PATH: /data/products.sqlite3
+    volumes: ["fastapi_data:/data"]
+  drf:
+    build: ./backend/drf_app
+    ports: ["8001:8001"]
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-development-only-change-me}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,drf
+      DRF_DB_PATH: /data/products.sqlite3
+    volumes: ["drf_data:/data"]
+  frontend:
+    build: ./frontend
+    ports: ["5173:5173"]
+    depends_on: [fastapi, drf]
+volumes:
+  fastapi_data:
+  drf_data:

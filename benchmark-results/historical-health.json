@@ -1,0 +1,16 @@
+{
+  "status": "historical",
+  "note": "Health-only results from the prior supplied benchmark; retained for context and not represented as a fresh run.",
+  "fastapi": {
+    "mean_latency_ms": 18.498,
+    "median_latency_ms": 17.606,
+    "p95_latency_ms": 30.953,
+    "requests_per_second": 256.94
+  },
+  "drf": {
+    "mean_latency_ms": 23.073,
+    "median_latency_ms": 22.462,
+    "p95_latency_ms": 39.833,
+    "requests_per_second": 201.64
+  }
+}

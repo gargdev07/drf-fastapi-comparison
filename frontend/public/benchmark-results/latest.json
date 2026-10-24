@@ -1,0 +1,218 @@
+{
+  "status": "measured",
+  "measured_at_utc": "2026-10-23T20:21:27.700534+00:00",
+  "environment": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "fastapi": "0.135.3",
+      "uvicorn": "0.44.0",
+      "httpx": "0.28.1",
+      "Django": "5.2.18",
+      "djangorestframework": "3.18.3",
+      "pydantic": "2.9.2"
+    }
+  },
+  "configuration": {
+    "server": "Uvicorn, one worker per app, local loopback HTTP",
+    "database": "separate temporary SQLite files; each seeded with the same 3 product records",
+    "cache": "DummyJSON cache not exercised; no upstream requests made",
+    "request_count": 30,
+    "warmup_count": 5,
+    "trials": 3,
+    "concurrency": 4,
+    "external_calls": false
+  },
+  "fastapi": {
+    "health": {
+      "url": "http://127.0.0.1:62028/api/v1/health",
+      "sample_count": 90,
+      "mean_latency_ms": 9.162,
+      "median_latency_ms": 6.23,
+      "p95_latency_ms": 24.717,
+      "requests_per_second": 397.35,
+      "trials": [
+        {
+          "mean_latency_ms": 9.558,
+          "median_latency_ms": 4.981,
+          "p95_latency_ms": 27.935,
+          "requests_per_second": 378.3,
+          "wall_seconds": 0.0793
+        },
+        {
+          "mean_latency_ms": 7.286,
+          "median_latency_ms": 5.372,
+          "p95_latency_ms": 20.975,
+          "requests_per_second": 468.63,
+          "wall_seconds": 0.064
+        },
+        {
+          "mean_latency_ms": 10.643,
+          "median_latency_ms": 7.828,
+          "p95_latency_ms": 21.994,
+          "requests_per_second": 360.57,
+          "wall_seconds": 0.0832
+        }
+      ]
+    },
+    "product_list": {
+      "url": "http://127.0.0.1:62028/api/v1/products?limit=20&offset=0",
+      "sample_count": 90,
+      "mean_latency_ms": 11.421,
+      "median_latency_ms": 7.459,
+      "p95_latency_ms": 30.247,
+      "requests_per_second": 310.99,
+      "trials": [
+        {
+          "mean_latency_ms": 15.353,
+          "median_latency_ms": 15.518,
+          "p95_latency_ms": 32.046,
+          "requests_per_second": 251.28,
+          "wall_seconds": 0.1194
+        },
+        {
+          "mean_latency_ms": 10.891,
+          "median_latency_ms": 7.459,
+          "p95_latency_ms": 29.824,
+          "requests_per_second": 285.11,
+          "wall_seconds": 0.1052
+        },
+        {
+          "mean_latency_ms": 8.019,
+          "median_latency_ms": 7.295,
+          "p95_latency_ms": 21.306,
+          "requests_per_second": 462.71,
+          "wall_seconds": 0.0648
+        }
+      ]
+    },
+    "product_retrieve": {
+      "url": "http://127.0.0.1:62028/api/v1/products/3",
+      "sample_count": 90,
+      "mean_latency_ms": 9.037,
+      "median_latency_ms": 7.348,
+      "p95_latency_ms": 21.853,
+      "requests_per_second": 371.75,
+      "trials": [
+        {
+          "mean_latency_ms": 10.001,
+          "median_latency_ms": 7.318,
+          "p95_latency_ms": 27.58,
+          "requests_per_second": 359.2,
+          "wall_seconds": 0.0835
+        },
+        {
+          "mean_latency_ms": 8.694,
+          "median_latency_ms": 6.591,
+          "p95_latency_ms": 21.853,
+          "requests_per_second": 365.65,
+          "wall_seconds": 0.082
+        },
+        {
+          "mean_latency_ms": 8.416,
+          "median_latency_ms": 7.658,
+          "p95_latency_ms": 18.774,
+          "requests_per_second": 391.67,
+          "wall_seconds": 0.0766
+        }
+      ]
+    },
+    "database_product_count": 3
+  },
+  "drf": {
+    "health": {
+      "url": "http://127.0.0.1:62039/api/v1/health",
+      "sample_count": 90,
+      "mean_latency_ms": 20.639,
+      "median_latency_ms": 20.715,
+      "p95_latency_ms": 26.025,
+      "requests_per_second": 182.11,
+      "trials": [
+        {
+          "mean_latency_ms": 20.842,
+          "median_latency_ms": 21.082,
+          "p95_latency_ms": 25.933,
+          "requests_per_second": 185.34,
+          "wall_seconds": 0.1619
+        },
+        {
+          "mean_latency_ms": 21.163,
+          "median_latency_ms": 20.839,
+          "p95_latency_ms": 32.941,
+          "requests_per_second": 179.27,
+          "wall_seconds": 0.1673
+        },
+        {
+          "mean_latency_ms": 19.912,
+          "median_latency_ms": 19.65,
+          "p95_latency_ms": 25.331,
+          "requests_per_second": 181.86,
+          "wall_seconds": 0.165
+        }
+      ]
+    },
+    "product_list": {
+      "url": "http://127.0.0.1:62039/api/v1/products?limit=20&offset=0",
+      "sample_count": 90,
+      "mean_latency_ms": 34.117,
+      "median_latency_ms": 32.895,
+      "p95_latency_ms": 50.319,
+      "requests_per_second": 114.07,
+      "trials": [
+        {
+          "mean_latency_ms": 36.542,
+          "median_latency_ms": 35.915,
+          "p95_latency_ms": 52.591,
+          "requests_per_second": 105.85,
+          "wall_seconds": 0.2834
+        },
+        {
+          "mean_latency_ms": 32.83,
+          "median_latency_ms": 29.705,
+          "p95_latency_ms": 50.319,
+          "requests_per_second": 118.92,
+          "wall_seconds": 0.2523
+        },
+        {
+          "mean_latency_ms": 32.979,
+          "median_latency_ms": 30.687,
+          "p95_latency_ms": 46.903,
+          "requests_per_second": 118.46,
+          "wall_seconds": 0.2533
+        }
+      ]
+    },
+    "product_retrieve": {
+      "url": "http://127.0.0.1:62039/api/v1/products/3",
+      "sample_count": 90,
+      "mean_latency_ms": 28.289,
+      "median_latency_ms": 27.084,
+      "p95_latency_ms": 41.64,
+      "requests_per_second": 136.22,
+      "trials": [
+        {
+          "mean_latency_ms": 28.469,
+          "median_latency_ms": 27.822,
+          "p95_latency_ms": 36.51,
+          "requests_per_second": 136.19,
+          "wall_seconds": 0.2203
+        },
+        {
+          "mean_latency_ms": 29.117,
+          "median_latency_ms": 29.274,
+          "p95_latency_ms": 44.87,
+          "requests_per_second": 132.93,
+          "wall_seconds": 0.2257
+        },
+        {
+          "mean_latency_ms": 27.282,
+          "median_latency_ms": 25.798,
+          "p95_latency_ms": 36.34,
+          "requests_per_second": 139.72,
+          "wall_seconds": 0.2147
+        }
+      ]
+    },
+    "database_product_count": 3
+  }
+}

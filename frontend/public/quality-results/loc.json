@@ -1,0 +1,63 @@
+{
+  "method": "Count nonblank source lines; omit standalone comment lines. Runtime application includes FastAPI source, DRF product implementation, and shared frontend. DRF config/boilerplate, migrations, tests, scripts, generated assets, dependencies, caches, databases and README are separate or excluded.",
+  "total_application_loc": 2089,
+  "runtime_files": {
+    "frontend/index.html": 1,
+    "frontend/src/App.jsx": 179,
+    "frontend/src/main.jsx": 5,
+    "frontend/src/style.css": 1439,
+    "backend/fastapi_app/main.py": 240,
+    "backend/drf_app/products/exceptions.py": 22,
+    "backend/drf_app/products/models.py": 10,
+    "backend/drf_app/products/serializers.py": 62,
+    "backend/drf_app/products/views.py": 131
+  },
+  "framework_feature_loc": {
+    "FastAPI": {
+      "files": {
+        "backend/fastapi_app/main.py": 240
+      },
+      "total": 240,
+      "note": "FastAPI main.py includes app setup and route code; DRF bucket includes product models, serializers, views and exception formatting."
+    },
+    "DRF": {
+      "files": {
+        "backend/drf_app/products/exceptions.py": 22,
+        "backend/drf_app/products/models.py": 10,
+        "backend/drf_app/products/serializers.py": 62,
+        "backend/drf_app/products/views.py": 131
+      },
+      "total": 225,
+      "note": "FastAPI main.py includes app setup and route code; DRF bucket includes product models, serializers, views and exception formatting."
+    }
+  },
+  "framework_configuration_and_scripts_loc": 257,
+  "configuration_files": {
+    "scripts/benchmark.py": 127,
+    "scripts/count_loc.py": 33,
+    "scripts/run_checks.py": 28,
+    "backend/drf_app/manage.py": 6,
+    "backend/drf_app/config/asgi.py": 4,
+    "backend/drf_app/config/settings.py": 17,
+    "backend/drf_app/config/urls.py": 9,
+    "backend/drf_app/config/wsgi.py": 4,
+    "backend/drf_app/config/__init__.py": 0,
+    "backend/drf_app/products/apps.py": 4,
+    "backend/drf_app/products/middleware.py": 16,
+    "backend/drf_app/products/urls.py": 9,
+    "backend/drf_app/products/__init__.py": 0
+  },
+  "generated_migration_loc": 42,
+  "migration_files": {
+    "backend/drf_app/products/migrations/0001_initial.py": 19,
+    "backend/drf_app/products/migrations/0002_seed_products.py": 11,
+    "backend/drf_app/products/migrations/0003_alter_product_image.py": 12,
+    "backend/drf_app/products/migrations/__init__.py": 0
+  },
+  "test_loc_excluded_from_application_total": 278,
+  "test_files": {
+    "tests/test_contract.py": 219,
+    "backend/fastapi_app/test_main.py": 36,
+    "backend/drf_app/products/tests.py": 23
+  }
+}

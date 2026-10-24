@@ -1,0 +1,55 @@
+{
+  "measured_at_utc": "2026-10-23T17:43:35.583716+00:00",
+  "method": "HTTP GET /api/v1/health; warm-up excluded; local client round-trip timing",
+  "fastapi": {
+    "http": {
+      "url": "http://127.0.0.1:8000/api/v1/health",
+      "requests": 50,
+      "concurrency": 5,
+      "wall_seconds": 0.1111,
+      "requests_per_second": 450.09,
+      "mean_latency_ms": 9.278,
+      "median_latency_ms": 6.9,
+      "p95_latency_ms": 25.978
+    },
+    "source": {
+      "files": {
+        "backend\\fastapi_app\\main.py": 117
+      },
+      "nonblank_noncomment_lines": 117
+    }
+  },
+  "drf": {
+    "http": {
+      "url": "http://127.0.0.1:8001/api/v1/health",
+      "requests": 50,
+      "concurrency": 5,
+      "wall_seconds": 0.1299,
+      "requests_per_second": 384.81,
+      "mean_latency_ms": 11.667,
+      "median_latency_ms": 9.554,
+      "p95_latency_ms": 28.384
+    },
+    "source": {
+      "files": {
+        "backend\\drf_app\\manage.py": 6,
+        "backend\\drf_app\\config\\asgi.py": 4,
+        "backend\\drf_app\\config\\settings.py": 16,
+        "backend\\drf_app\\config\\urls.py": 7,
+        "backend\\drf_app\\config\\wsgi.py": 4,
+        "backend\\drf_app\\config\\__init__.py": 0,
+        "backend\\drf_app\\products\\apps.py": 4,
+        "backend\\drf_app\\products\\exceptions.py": 22,
+        "backend\\drf_app\\products\\middleware.py": 16,
+        "backend\\drf_app\\products\\models.py": 10,
+        "backend\\drf_app\\products\\serializers.py": 17,
+        "backend\\drf_app\\products\\urls.py": 9,
+        "backend\\drf_app\\products\\views.py": 91,
+        "backend\\drf_app\\products\\__init__.py": 0,
+        "backend\\drf_app\\products\\migrations\\0001_initial.py": 19,
+        "backend\\drf_app\\products\\migrations\\__init__.py": 0
+      },
+      "nonblank_noncomment_lines": 225
+    }
+  }
+}
